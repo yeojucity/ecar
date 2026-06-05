@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>여주시 전기차 보조금 조회 2026 (스마트폰)</title>
+<style>
+:root{
+  --bg:#f0f4f8;--card:#fff;--primary:#1a56db;--primary-dark:#1347c2;
+  --warn:#dc2626;--warn-bg:#fef2f2;--info-bg:#eff6ff;
+  --text:#111827;--muted:#6b7280;--border:#e5e7eb;--sec-bg:#f8fafc;
+  --green:#16a34a;--green-bg:#dcfce7;
+  --r:14px;--sh:0 2px 10px #00000014
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);min-height:100vh;font-family:-apple-system,Apple SD Gothic Neo,Malgun Gothic,맑은 고딕,sans-serif}
+
+/* HEADER */
+.hdr{background:var(--primary);color:#fff;z-index:100;padding:14px 16px 12px;position:sticky;top:0;box-shadow:0 2px 8px #1a56db4d}
+.hdr h1{letter-spacing:-.3px;font-size:16px;font-weight:900}
+.hdr-sub{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4px;margin-top:4px}
+.hdr-sub p{opacity:.8;font-size:11px}
+.data-badge{color:#fff;white-space:nowrap;background:#ffffff2e;border-radius:8px;padding:4px 10px;font-size:10px;font-weight:700}
+
+/* CONTENT */
+.content{max-width:480px;margin:0 auto;padding:12px}
+
+
+/* RESET BTN */
+.reset-btn{border-radius:var(--r);width:100%;color:var(--muted);cursor:pointer;background:#fff;border:2px dashed #e5e7eb;display:flex;justify-content:center;align-items:center;gap:6px;margin-bottom:10px;padding:12px;font-family:inherit;font-size:13px;font-weight:700;transition:all .15s}
+.reset-btn:active{background:#f3f4f6}
+
+/* SECTION CARD */
+.sc{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:10px;padding:16px}
+.st{color:var(--primary);border-bottom:2px solid var(--info-bg);display:flex;align-items:center;gap:6px;margin-bottom:12px;padding-bottom:8px;font-size:13px;font-weight:700}
+.st:before{content:"";background:var(--primary);border-radius:2px;width:4px;height:16px;display:block}
+
+/* FORM */
+.row{display:flex;gap:8px}
+.row .fd{flex:1}
+.fd{margin-bottom:10px}
+.fd>label{color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-bottom:5px;font-size:11px;font-weight:700;display:block}
+.fd select{border:1.5px solid var(--border);background:var(--sec-bg);width:100%;color:var(--text);-webkit-appearance:none;appearance:none;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-position:right 12px center;background-repeat:no-repeat;border-radius:10px;padding:10px 12px;font-family:inherit;font-size:14px}
+.fd select:focus{border-color:var(--primary);outline:none}
+
+/* OPTION BUTTONS */
+.orow{display:flex;flex-wrap:wrap;gap:6px}
+.ob{border:1.5px solid var(--border);background:var(--sec-bg);min-width:0;color:var(--text);cursor:pointer;text-align:center;white-space:nowrap;text-overflow:ellipsis;border-radius:10px;flex:1;padding:9px 8px;font-family:inherit;font-size:13px;font-weight:500;transition:all .15s;overflow:hidden}
+.ob.active{background:var(--primary);border-color:var(--primary);color:#fff;font-weight:700}
+.ob:active{transform:scale(.97)}
+
+/* CHECKBOX OPTS */
+.copts{display:flex;flex-direction:column;gap:6px}
+.copt{border:1.5px solid var(--border);background:var(--sec-bg);cursor:pointer;-webkit-tap-highlight-color:transparent;border-radius:10px;display:flex;align-items:center;gap:10px;padding:10px 12px;transition:all .15s}
+.copt.checked{background:var(--info-bg);border-color:var(--primary)}
+.copt.disabled{opacity:.35;pointer-events:none}
+.copt .cb{border:2px solid var(--border);border-radius:5px;flex-shrink:0;display:flex;justify-content:center;align-items:center;width:18px;height:18px;transition:all .15s}
+.copt.checked .cb{background:var(--primary);border-color:var(--primary)}
+.copt .cb:after{content:"✓";color:#fff;font-size:11px;font-weight:900;display:none}
+.copt.checked .cb:after{display:block}
+.copt .cl{flex:1;font-size:13px;font-weight:500;line-height:1.4}
+.copt .ca{color:var(--primary);white-space:nowrap;font-size:11px;font-weight:700}
+
+/* SUB BOX */
+.sub{background:var(--sec-bg);border:1px solid var(--border);border-radius:10px;margin-top:10px;padding:12px}
+.slbl{color:var(--muted);text-transform:uppercase;margin-bottom:8px;font-size:11px;font-weight:700}
+
+/* BADGES */
+.badge{border-radius:20px;margin-left:6px;padding:2px 8px;font-size:11px;font-weight:700;display:inline-block}
+.badge.ok{color:var(--green);background:var(--green-bg)}
+.badge.ng{background:var(--warn-bg);color:var(--warn)}
+
+/* ALERTS */
+.alert{border-radius:10px;display:none;align-items:flex-start;gap:6px;margin-top:6px;padding:10px 12px;font-size:12px;font-weight:600;line-height:1.5}
+.alert.err{background:var(--warn-bg);color:var(--warn);border:1px solid #fca5a5}
+.alert.warn{color:#92400e;background:#fffbeb;border:1px solid #fcd34d}
+.alert.info{background:var(--info-bg);color:var(--primary);border:1px solid #bfdbfe}
+.alert.ok{color:#15803d;background:var(--green-bg);border:1px solid #86efac}
+.alert.show{display:flex}
+.alert.err:before{content:"⚠️";flex-shrink:0;font-size:14px}
+.alert.warn:before{content:"⚡";flex-shrink:0;font-size:14px}
+.alert.info:before{content:"ℹ️";flex-shrink:0;font-size:14px}
+.alert.ok:before{content:"✅";flex-shrink:0;font-size:14px}
+
+/* RESULT */
+.res-sec{border-radius:var(--r);color:#fff;background:linear-gradient(135deg,#1a56db 0%,#1347c2 100%);margin-bottom:10px;padding:16px;box-shadow:0 4px 16px #1a56db4d}
+.res-title{opacity:.8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;font-size:12px;font-weight:700}
+.res-item{background:#ffffff1a;border-radius:10px;margin-bottom:8px;padding:12px}
+.res-item-lbl{opacity:.75;margin-bottom:6px;font-size:11px;font-weight:600}
+.res-item-dtl{opacity:.85;font-size:12px;line-height:1.7}
+.res-item-amt{margin-top:4px;font-size:17px;font-weight:900}
+.res-notice{opacity:.7;background:#ffffff14;border-radius:8px;margin-top:4px;padding:8px;font-size:11px;line-height:1.5}
+.total-box{background:#00000040;border-radius:12px;display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding:14px 16px}
+.total-lbl{opacity:.85;font-size:12px;font-weight:700}
+.total-amt{font-size:26px;font-weight:900}
+
+/* DOCS */
+.docs-btn{border-radius:var(--r);color:#fff;cursor:pointer;background:#111827;border:none;display:flex;justify-content:center;align-items:center;gap:8px;width:100%;margin-bottom:10px;padding:14px;font-family:inherit;font-size:15px;font-weight:700}
+.docs-sec{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:20px;padding:16px;display:none}
+.docs-sec.show{display:block}
+.docs-sec h3{color:var(--primary);margin-bottom:8px;font-size:13px;font-weight:700}
+.docs-notice{color:#92400e;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;margin-bottom:12px;padding:10px 12px;font-size:11px;font-weight:500;line-height:1.6}
+.docs-group{margin-bottom:12px}
+.docs-group-title{color:var(--muted);border-bottom:1px solid var(--border);margin-bottom:6px;padding-bottom:4px;font-size:12px;font-weight:700}
+.docs-sec ul{padding-left:16px}
+.docs-sec li{color:var(--text);padding:3px 0;font-size:13px;line-height:1.5}
+
+/* MODAL */
+.modal-bg{z-index:999;background:#0000008c;display:none;justify-content:center;align-items:center;padding:20px;position:fixed;inset:0}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:18px;width:100%;max-width:360px;padding:22px;box-shadow:0 8px 32px #0003}
+.modal h3{color:var(--text);margin-bottom:10px;font-size:15px;font-weight:900}
+.modal p{color:#374151;margin-bottom:16px;font-size:13px;line-height:1.7}
+.modal .mbtn-row{display:flex;gap:8px}
+.modal .mbtn{cursor:pointer;border:none;border-radius:12px;flex:1;padding:12px;font-family:inherit;font-size:14px;font-weight:700}
+.modal .mbtn.cancel{background:var(--sec-bg);color:var(--muted);border:1.5px solid var(--border)}
+.modal .mbtn.confirm{background:var(--primary);color:#fff}
+
+.hidden{display:none!important}
+
+/* NOTICE BANNER */
+.notice-banner{background:#fffbeb;border:1.5px solid #fcd34d;border-radius:var(--r);margin-bottom:10px;padding:12px 14px;font-size:12px;line-height:1.7;color:#78350f}
+.notice-banner .nb-title{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:800;color:#92400e;margin-bottom:6px}
+.notice-banner .nb-links{display:flex;gap:8px;margin-top:10px;flex-wrap:nowrap}
+.notice-banner .nb-btn{flex:1;justify-content:center}
+.notice-banner .nb-btn{display:inline-flex;align-items:center;gap:5px;border-radius:8px;padding:7px 12px;font-size:12px;font-weight:700;text-decoration:none;border:none;cursor:pointer;font-family:inherit}
+.notice-banner .nb-btn.doc{background:#1a56db;color:#fff}
+.notice-banner .nb-btn.tel{background:#16a34a;color:#fff}
+
+
+</style>
+
+<body>
+<div class="hdr">
+  <h1>🔋 여주시 전기차 보조금 조회 2026</h1>
+  <div class="hdr-sub">
+    <p>관내 제조사·판매 대리점 전용 · 2026년도</p>
+    <div class="data-badge"><span>기준일: </span>2026.06.05 &nbsp;|&nbsp; <span id="totalCount">-</span>종</div>
+  </div>
+</div>
+
+<div class="content">
+  <!-- 안내 배너 -->
+  <div class="notice-banner">
+    <div class="nb-title">⚠️ 참고사항(필독)</div>
+    본 조회 결과는 참고용입니다. 지원 대상 차량 및 보조금액은 예고 없이 변경될 수 있으니, 최종 내용은 공고문을 반드시 확인하세요.
+    <div class="nb-links">
+      <a class="nb-btn doc" href="https://www.yeoju.go.kr/www/selectEminwonView.do?pageUnit=10&amp;pageIndex=1&amp;searchCnd=B_Subject&amp;searchKrwd=%EC%A0%84%EA%B8%B0&amp;key=413&amp;not_ancmt_mgt_no=50716&amp;ofr_pageSize=10#n" target="_blank" rel="noopener noreferrer">📄 여주시 공고문 보기</a>
+      <a class="nb-btn tel" href="tel:031-887-2983">📞 031-887-2983</a>
+    </div>
+  </div>
+
+  <button class="reset-btn" onclick="resetAll()">🔄 새로 조회 (전체 초기화)</button>
+
+  <!-- STEP 1 -->
+  <div class="sc">
+    <div class="st">STEP 1 · 구매자격 및 이력 확인</div>
+    <div class="fd">
+      <label>구매자격</label>
+      <div class="orow" id="buyerTypeGroup">
+        <button class="ob active" data-val="individual" onclick="selectBuyerType(this)">개인</button>
+        <button class="ob" data-val="individual_biz" onclick="selectBuyerType(this)">개인사업자</button>
+        <button class="ob" data-val="corp" onclick="selectBuyerType(this)">법인</button>
+        <button class="ob" data-val="other" onclick="selectBuyerType(this)">기타단체</button>
+      </div>
+    </div>
+    <div class="fd" style="margin-top:4px">
+      <label>2년 이내 전기차 구매이력</label>
+      <div class="orow" id="historyGroup">
+        <button class="ob active" data-val="none" onclick="selectHistory(this)">없음</button>
+        <button class="ob" data-val="passenger" onclick="selectHistory(this)">전기승용 구매</button>
+        <button class="ob" data-val="cargo" onclick="selectHistory(this)">전기화물 구매</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="sc">
+    <div class="st">STEP 2 · 차종 및 모델 선택</div>
+    <div class="row">
+      <div class="fd">
+        <label>차종 구분</label>
+        <select id="carCat" onchange="onCatChange()">
+          <option value="" disabled selected>선택</option>
+          <option value="passenger">승용</option>
+          <option value="cargo">화물</option>
+        </select>
+      </div>
+      <div class="fd">
+        <label>제조사</label>
+        <select id="maker" onchange="updateModels()">
+          <option value="" disabled selected>선택</option>
+        </select>
+      </div>
+    </div>
+    <div class="alert err" id="carTypeAlert">2년 이내 동일 차종 구매이력이 있어 재지원이 불가합니다.</div>
+    <div class="fd">
+      <label>모델</label>
+      <select id="model" onchange="calculate()">
+        <option value="" disabled selected>선택</option>
+      </select>
+    </div>
+    <!-- 선택 차량 정보 카드 -->
+    <div id="selectedCarInfo" class="hidden" style="background:var(--info-bg);border:1.5px solid #bfdbfe;border-radius:10px;padding:12px;margin-top:4px">
+      <div style="font-size:11px;color:var(--primary);font-weight:700;margin-bottom:6px">선택 차량 기본 보조금</div>
+      <div id="selectedCarDetail" style="font-size:13px;line-height:1.8"></div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="sc">
+    <div class="st">STEP 3 · 구매자 조건</div>
+    <div id="addSupportArea"></div>
+    <!-- 경유화물차 -->
+    <div class="hidden" id="dieselCargoSection" style="margin-top:10px">
+      <div class="slbl">기존 경유화물차 보유여부</div>
+      <div class="orow" id="dieselCargoGroup">
+        <button class="ob active" data-val="none" onclick="selectDieselCargo(this)">없음</button>
+        <button class="ob" data-val="has" onclick="selectDieselCargo(this)">있음</button>
+      </div>
+      <div class="hidden" id="dieselCargoSub" style="margin-top:8px">
+        <div class="orow" id="dieselCargoHandleGroup">
+          <button class="ob" data-val="keep" onclick="selectDieselHandle(this)">계속 보유</button>
+          <button class="ob" data-val="sell" onclick="selectDieselHandle(this)">매매</button>
+          <button class="ob" data-val="export" onclick="selectDieselHandle(this)">수출</button>
+          <button class="ob" data-val="scrap" onclick="selectDieselHandle(this)">폐차</button>
+        </div>
+        <div class="alert err show" id="dieselKeepAlert" style="margin-top:8px;display:none">계속 보유 시 성능보조금이 차감됩니다. (국비 -50만원, 지방비 -35만원)</div>
+        <div class="hidden" id="dieselDisposeDateArea" style="margin-top:8px">
+          <div class="slbl" style="margin-top:6px">처분 시기</div>
+          <div class="orow" id="dieselDisposeDateGroup">
+            <button class="ob" data-val="before_apply" onclick="selectDieselDisposeDate(this)">지원신청 이전</button>
+            <button class="ob" data-val="before_pay" onclick="selectDieselDisposeDate(this)">지급신청 이전</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="sc" id="step4Card">
+    <div class="st">STEP 4 · 전환지원금 대상 여부</div>
+    <div class="alert err" id="convertBuyerAlert" style="margin-bottom:10px">개인사업자·법인·기타단체는 전환지원금 대상이 아닙니다.</div>
+    <div class="fd">
+      <label>내연기관차 보유 여부</label>
+      <div class="orow" id="iceCarGroup">
+        <button class="ob active" data-val="no" onclick="selectIceCar(this)">보유안함</button>
+        <button class="ob" data-val="yes" onclick="selectIceCar(this)">보유함</button>
+      </div>
+    </div>
+    <div class="hidden" id="iceCarDetail">
+      <div class="sub">
+        <div class="slbl">보유 차종</div>
+        <div class="orow" id="convertVehicleGroup">
+          <button class="ob" data-val="passenger" onclick="selectConvertVehicle(this)">승용</button>
+          <button class="ob" data-val="cargo" onclick="selectConvertVehicle(this)">화물</button>
+          <button class="ob" data-val="other" onclick="selectConvertVehicle(this)">그 외</button>
+        </div>
+        <div class="alert err" id="convertVehicleAlert" style="margin-top:8px">전환지원금 대상이 아닙니다.</div>
+        <div class="hidden" id="convertFuelArea" style="margin-top:10px">
+          <div class="slbl">사용 연료</div>
+          <div id="convertFuelGroup" style="display:flex;flex-wrap:wrap;gap:6px">
+            <button style="flex:0 0 calc(33.3% - 4px)" class="ob" data-val="gasoline" onclick="selectConvertFuel(this)">휘발유</button>
+            <button style="flex:0 0 calc(33.3% - 4px)" class="ob" data-val="diesel" onclick="selectConvertFuel(this)">경유</button>
+            <button style="flex:0 0 calc(33.3% - 4px)" class="ob" data-val="lpg" onclick="selectConvertFuel(this)">LPG</button>
+            <button style="flex:0 0 calc(33.3% - 4px)" class="ob" data-val="hybrid" onclick="selectConvertFuel(this)">하이브리드</button>
+            <button style="flex:0 0 calc(33.3% - 4px)" class="ob" data-val="etc" onclick="selectConvertFuel(this)">기타</button>
+          </div>
+          <div class="alert" id="convertFuelAlert" style="margin-top:8px"></div>
+          <div class="hidden" id="convertOwnerArea" style="margin-top:10px">
+            <div class="slbl">보유 기간 조건 확인</div>
+            <div class="copts">
+              <div style="border:1.5px solid var(--border);background:var(--sec-bg);border-radius:10px;padding:10px 12px">
+                <div style="color:var(--muted);margin-bottom:6px;font-size:12px;font-weight:700">최초등록일로부터 3년 경과</div>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div class="orow" id="reg3yrGroup" style="flex:1">
+                    <button class="ob" data-val="pass" onclick="selectReg3yr(this)">경과</button>
+                    <button class="ob" data-val="fail" onclick="selectReg3yr(this)">미경과</button>
+                  </div>
+                  <span id="reg3yrBadge" style="text-align:center;min-width:44px"></span>
+                </div>
+              </div>
+              <div style="border:1.5px solid var(--border);background:var(--sec-bg);border-radius:10px;margin-top:6px;padding:10px 12px">
+                <div style="color:var(--muted);margin-bottom:6px;font-size:12px;font-weight:700">신청일로부터 3년 이상 보유</div>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div class="orow" id="own3yrGroup" style="flex:1">
+                    <button class="ob" data-val="pass" onclick="selectOwn3yr(this)">충족</button>
+                    <button class="ob" data-val="fail" onclick="selectOwn3yr(this)">미충족</button>
+                  </div>
+                  <span id="own3yrBadge" style="text-align:center;min-width:44px"></span>
+                </div>
+              </div>
+            </div>
+            <div class="alert err" id="convertEligAlert" style="margin-top:8px">전환지원금 대상이 아닙니다.</div>
+            <div class="alert ok" id="convertEligOk" style="margin-top:8px">전환지원금 대상입니다.</div>
+            <div class="hidden" id="convertDisposeArea" style="margin-top:10px">
+              <div class="slbl">기존 차량 처분 방법</div>
+              <div class="orow" id="convertDisposeGroup">
+                <button class="ob" data-val="keep" onclick="selectConvertDispose(this)">계속 보유</button>
+                <button class="ob" data-val="sell" onclick="selectConvertDispose(this)">매매</button>
+                <button class="ob" data-val="export" onclick="selectConvertDispose(this)">수출</button>
+                <button class="ob" data-val="scrap" onclick="selectConvertDispose(this)">폐차</button>
+              </div>
+              <div class="alert err" id="convertKeepAlert" style="margin-top:8px">계속 보유 시 전환지원금 비대상입니다.</div>
+              <div class="hidden" id="convertDisposeDateArea" style="margin-top:8px">
+                <div class="slbl" style="margin-top:6px">처분 시기</div>
+                <div class="orow" id="convertDisposeDateGroup">
+                  <button class="ob" data-val="before_apply" onclick="selectConvertDisposeDate(this)">지원신청 이전</button>
+                  <button class="ob" data-val="before_pay" onclick="selectConvertDisposeDate(this)">지급신청 이전</button>
+                </div>
+                <div class="alert info" id="convertDisposeDateAlert" style="margin-top:8px">보조금 지급신청 전 처분·말소를 완료하여야 전환지원금 지급이 가능합니다.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 결과 -->
+  <div class="res-sec">
+    <div class="res-title">보조금 계산내역</div>
+    <div class="res-item">
+      <div class="res-item-lbl">① 기본보조금 (성능보조금)</div>
+      <div class="res-item-dtl" id="basicDetail">차량을 선택해주세요</div>
+      <div class="res-item-amt" id="basicAmount">-</div>
+      <div class="res-notice" id="basicNotice" style="display:none"></div>
+    </div>
+    <div class="res-item">
+      <div class="res-item-lbl">② 추가보조금</div>
+      <div class="res-item-dtl" id="addDetail">구매자 조건을 선택해주세요</div>
+      <div class="res-item-amt" id="addAmount">-</div>
+    </div>
+    <div class="res-item">
+      <div class="res-item-lbl">③ 전환지원금</div>
+      <div class="res-item-dtl" id="convertDetail2">전환지원금 조건을 선택해주세요</div>
+      <div class="res-item-amt" id="convertAmount">-</div>
+    </div>
+    <div class="total-box">
+      <div class="total-lbl">보조금 예산 지원 합계</div>
+      <div class="total-amt" id="finalTotal">- 만원</div>
+    </div>
+  </div>
+
+  <button class="docs-btn" onclick="toggleDocs()">📄 필요서류 보기</button>
+  <div class="docs-sec" id="docsSection">
+    <h3>📋 제출 서류 목록</h3>
+    <div class="docs-notice">※ 모든 서류는 <b>신청일 기준 1개월 이내 발급</b>된 자료만 가능합니다.<br>사진촬영·화면캡처·팩스문서·스캔자료 등은 <b>제출 불가</b>합니다.</div>
+    <div id="docList"></div>
+  </div>
+</div>
+
+<!-- 모달 -->
+<div class="modal-bg" id="disposeModal">
+  <div class="modal">
+    <h3>⚠️ 전환지원금 안내</h3>
+    <p id="disposeModalMsg">보조금 지급신청 전 <b>처분·말소를 완료</b>하여야 전환지원금 지급이 가능합니다.<br><br>계속 진행하시겠습니까?</p>
+    <div class="mbtn-row">
+      <button class="mbtn cancel" onclick="disposeModalCancel()">취소 (비대상)</button>
+      <button class="mbtn confirm" onclick="disposeModalConfirm()">진행 (대상)</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  차량 데이터 (PDF 2026 여주시 전체)
+//  cat: passenger | small | cargo | cargo_mini
+//  bn/bl: 기본 국비/지방비
+//  cn/cl: 전환지원금 국비/지방비
+// ══════════════════════════════════════════════
+const VEHICLES = [
+// ── 일반승용 ──
+{cat:"passenger",maker:"현대",model:"GV60 스탠다드 2WD 19인치",bn:285,bl:196,cn:57,cl:17},
+{cat:"passenger",maker:"현대",model:"GV60 스탠다드 AWD 19인치",bn:272,bl:187,cn:54,cl:16},
+{cat:"passenger",maker:"현대",model:"GV60 스탠다드 AWD 20인치",bn:261,bl:180,cn:52,cl:16},
+{cat:"passenger",maker:"현대",model:"코나 일렉트릭 2WD 스탠다드 17인치",bn:437,bl:301,cn:87,cl:26},
+{cat:"passenger",maker:"현대",model:"코나 일렉트릭 2WD 롱레인지 17인치",bn:514,bl:354,cn:100,cl:30},
+{cat:"passenger",maker:"현대",model:"아이오닉6 N",bn:250,bl:172,cn:50,cl:15},
+{cat:"passenger",maker:"현대",model:"코나 일렉트릭 2WD 롱레인지 17인치(빌트인캠 미적용)",bn:514,bl:354,cn:100,cl:30},
+{cat:"passenger",maker:"현대",model:"코나 일렉트릭 2WD 롱레인지 19인치",bn:459,bl:316,cn:92,cl:28},
+{cat:"passenger",maker:"현대",model:"ELECTRIFIED GV70 AWD 19인치",bn:261,bl:180,cn:52,cl:16},
+{cat:"passenger",maker:"현대",model:"ELECTRIFIED GV70 AWD 20인치",bn:245,bl:168,cn:49,cl:15},
+{cat:"passenger",maker:"현대",model:"ELECTRIFIED G80",bn:270,bl:186,cn:54,cl:16},
+{cat:"passenger",maker:"현대",model:"더 뉴 아이오닉5 2WD 스탠다드 19인치",bn:483,bl:333,cn:97,cl:29},
+{cat:"passenger",maker:"현대",model:"더 뉴 아이오닉5 2WD 롱레인지 19인치",bn:564,bl:388,cn:100,cl:30},
+{cat:"passenger",maker:"현대",model:"더 뉴 아이오닉5 2WD 롱레인지 19인치(빌트인캠 미적용)",bn:567,bl:391,cn:100,cl:30},
+{cat:"passenger",maker:"현대",model:"더 뉴 아이오닉5 2WD 롱레인지 20인치",bn:559,bl:385,cn:100,cl:30},
+{cat:"passenger",maker:"현대",model:"더 뉴 아이오닉5 2WD 롱레인지 N라인 20인치",bn:541,bl:373,cn:100,cl:30},
+{cat:"passenger",maker:"현대",model:"더 뉴 아이오닉5 AWD 롱레인지 19인치",bn:558,bl:384,cn:100,cl:30},
+{cat:"passenger",maker:"현대",model:"더 뉴 아이오닉5 AWD 롱레인지 20인치",bn:532,bl:366,cn:100,cl:30},
+{cat:"passenger",maker:"현대",model:"더 뉴 아이오닉5 AWD 롱레인지 N라인 20인치",bn:510,bl:351,cn:100,cl:30},
+{cat:"passenger",maker:"현대",model:"더 뉴 아이오닉6 2WD 스탠다드 18인치",bn:560,bl:386,cn:100,cl:30},
+{cat:"passenger",maker:"현대",model:"더 뉴 아이오닉6 2WD 롱레인지 18인치",bn:570,bl:393,cn:100,cl:30},
+{cat:"passenger",maker:"현대",model:"더 뉴 아이오닉6 2WD 롱레인지 20인치",bn:570,bl:393,cn:100,cl:30},
+{cat:"passenger",maker:"현대",model:"더 뉴 아이오닉6 2WD 롱레인지 N라인 20인치",bn:570,bl:393,cn:100,cl:30},
+{cat:"passenger",maker:"현대",model:"더 뉴 아이오닉6 AWD 롱레인지 18인치",bn:570,bl:393,cn:100,cl:30},
+{cat:"passenger",maker:"현대",model:"더 뉴 아이오닉6 AWD 롱레인지 20인치",bn:553,bl:381,cn:100,cl:30},
+{cat:"passenger",maker:"현대",model:"더 뉴 아이오닉6 AWD 롱레인지 N라인 20인치",bn:537,bl:370,cn:100,cl:30},
+{cat:"passenger",maker:"현대",model:"아이오닉9 성능형 AWD",bn:272,bl:187,cn:54,cl:16},
+{cat:"passenger",maker:"현대",model:"아이오닉9 항속형 2WD",bn:274,bl:188,cn:55,cl:17},
+{cat:"passenger",maker:"현대",model:"아이오닉9 항속형 AWD",bn:271,bl:186,cn:54,cl:16},
+{cat:"passenger",maker:"현대",model:"스타리아 리무진 일렉트릭 6인승",bn:229,bl:157,cn:46,cl:14},
+{cat:"passenger",maker:"기아",model:"The all-new Kia Niro EV",bn:489,bl:337,cn:98,cl:29},
+{cat:"passenger",maker:"기아",model:"EV9 롱레인지 2WD 19인치",bn:270,bl:186,cn:54,cl:16},
+{cat:"passenger",maker:"기아",model:"EV9 롱레인지 2WD 20인치",bn:268,bl:184,cn:54,cl:16},
+{cat:"passenger",maker:"기아",model:"EV9 롱레인지 4WD 19인치",bn:254,bl:175,cn:51,cl:15},
+{cat:"passenger",maker:"기아",model:"EV9 롱레인지 4WD 21인치",bn:260,bl:179,cn:52,cl:16},
+{cat:"passenger",maker:"기아",model:"EV9 롱레인지 GTL 4WD 21인치",bn:252,bl:173,cn:50,cl:15},
+{cat:"passenger",maker:"기아",model:"더뉴EV6 롱레인지 4WD 20인치",bn:532,bl:366,cn:100,cl:30},
+{cat:"passenger",maker:"기아",model:"더뉴EV6 롱레인지 2WD 20인치",bn:559,bl:385,cn:100,cl:30},
+{cat:"passenger",maker:"기아",model:"더뉴EV6 롱레인지 4WD 19인치",bn:561,bl:386,cn:100,cl:30},
+{cat:"passenger",maker:"기아",model:"더뉴EV6 롱레인지 2WD 19인치",bn:570,bl:393,cn:100,cl:30},
+{cat:"passenger",maker:"기아",model:"EV3 롱레인지 2WD 17인치",bn:555,bl:382,cn:100,cl:30},
+{cat:"passenger",maker:"기아",model:"EV3 롱레인지 2WD 19인치",bn:555,bl:382,cn:100,cl:30},
+{cat:"passenger",maker:"기아",model:"EV3 스탠다드 2WD",bn:469,bl:323,cn:94,cl:28},
+{cat:"passenger",maker:"기아",model:"더뉴EV6 스탠다드",bn:501,bl:345,cn:100,cl:30},
+{cat:"passenger",maker:"기아",model:"EV9 스탠다드",bn:237,bl:163,cn:47,cl:14},
+{cat:"passenger",maker:"기아",model:"EV4 롱레인지 GTL 2WD 19인치",bn:555,bl:382,cn:100,cl:30},
+{cat:"passenger",maker:"기아",model:"EV4 스탠다드 2WD 19인치",bn:481,bl:331,cn:96,cl:29},
+{cat:"passenger",maker:"기아",model:"EV4 롱레인지 2WD 17인치",bn:555,bl:382,cn:100,cl:30},
+{cat:"passenger",maker:"기아",model:"EV4 롱레인지 2WD 19인치",bn:555,bl:382,cn:100,cl:30},
+{cat:"passenger",maker:"기아",model:"EV4 스탠다드 2WD 17인치",bn:512,bl:353,cn:100,cl:30},
+{cat:"passenger",maker:"기아",model:"PV5 패신저 5인승 롱레인지",bn:458,bl:315,cn:92,cl:28},
+{cat:"passenger",maker:"기아",model:"EV5 롱레인지 2WD",bn:552,bl:380,cn:100,cl:30},
+{cat:"passenger",maker:"기아",model:"EV5 롱레인지 4WD 18인치",bn:499,bl:344,cn:100,cl:30},
+{cat:"passenger",maker:"기아",model:"PV5 WAV(비용 지원)",bn:448,bl:308,cn:90,cl:27},
+{cat:"passenger",maker:"기아",model:"EV5 롱레인지 4WD 19인치",bn:493,bl:340,cn:99,cl:30},
+{cat:"passenger",maker:"기아",model:"PV5 WAV(비용 미지원)",bn:648,bl:446,cn:100,cl:30},
+{cat:"passenger",maker:"기아",model:"EV5 GT",bn:232,bl:160,cn:46,cl:14},
+{cat:"passenger",maker:"기아",model:"EV3 롱레인지 4WD 19인치",bn:539,bl:372,cn:100,cl:30},
+{cat:"passenger",maker:"기아",model:"EV3 GT",bn:248,bl:171,cn:50,cl:15},
+{cat:"passenger",maker:"기아",model:"EV4 롱레인지 4WD 19인치",bn:554,bl:382,cn:100,cl:30},
+{cat:"passenger",maker:"기아",model:"EV4 GT",bn:255,bl:176,cn:51,cl:15},
+{cat:"passenger",maker:"기아",model:"EV9 GT",bn:245,bl:169,cn:49,cl:15},
+{cat:"passenger",maker:"BMW",model:"MINI Cooper SE",bn:396,bl:273,cn:79,cl:24},
+{cat:"passenger",maker:"BMW",model:"iX1 xDrive30",bn:192,bl:132,cn:38,cl:11},
+{cat:"passenger",maker:"BMW",model:"iX2 eDrive20",bn:214,bl:147,cn:43,cl:13},
+{cat:"passenger",maker:"BMW",model:"MINI Countryman SE ALL4",bn:203,bl:140,cn:41,cl:12},
+{cat:"passenger",maker:"BMW",model:"MINI Countryman E",bn:217,bl:149,cn:43,cl:13},
+{cat:"passenger",maker:"BMW",model:"MINI Aceman SE",bn:400,bl:275,cn:80,cl:24},
+{cat:"passenger",maker:"BMW",model:"MINI JCW Aceman E",bn:197,bl:135,cn:39,cl:12},
+{cat:"passenger",maker:"BMW",model:"MINI JCW E",bn:191,bl:131,cn:38,cl:11},
+{cat:"passenger",maker:"BMW",model:"MINI Aceman E",bn:400,bl:275,cn:80,cl:24},
+{cat:"passenger",maker:"BMW",model:"i4 M60 LCI (71HD)",bn:233,bl:160,cn:47,cl:14},
+{cat:"passenger",maker:"BMW",model:"i4 eDrive 40 LCI(21HD)",bn:244,bl:168,cn:49,cl:15},
+{cat:"passenger",maker:"BMW",model:"i4 eDrive 40 LCI(61HD)",bn:256,bl:176,cn:51,cl:15},
+{cat:"passenger",maker:"BMW",model:"i5 eDrive 40",bn:262,bl:180,cn:52,cl:16},
+{cat:"passenger",maker:"BMW",model:"iX1 eDrive20",bn:212,bl:146,cn:42,cl:13},
+{cat:"passenger",maker:"테슬라",model:"Model 3 Performance",bn:200,bl:137,cn:40,cl:12},
+{cat:"passenger",maker:"테슬라",model:"Model 3 RWD(2025)",bn:168,bl:115,cn:34,cl:10},
+{cat:"passenger",maker:"테슬라",model:"Model 3 RWD",bn:168,bl:115,cn:34,cl:10},
+{cat:"passenger",maker:"테슬라",model:"Model 3 Premium Long Range RWD",bn:420,bl:289,cn:84,cl:25},
+{cat:"passenger",maker:"테슬라",model:"Model Y Premium RWD",bn:170,bl:117,cn:34,cl:10},
+{cat:"passenger",maker:"테슬라",model:"Model Y Premium Long Range",bn:210,bl:144,cn:42,cl:13},
+{cat:"passenger",maker:"테슬라",model:"Model Y RWD(2025)",bn:170,bl:117,cn:34,cl:10},
+{cat:"passenger",maker:"테슬라",model:"Model Y Long Range(2025)",bn:210,bl:145,cn:42,cl:13},
+{cat:"passenger",maker:"테슬라",model:"Model Y L AWD",bn:210,bl:145,cn:42,cl:13},
+{cat:"passenger",maker:"메르세데스-벤츠",model:"EQB 300 4MATIC(Facelift)",bn:154,bl:106,cn:31,cl:9},
+{cat:"passenger",maker:"메르세데스-벤츠",model:"EQA 250(Facelift)",bn:190,bl:131,cn:38,cl:11},
+{cat:"passenger",maker:"메르세데스-벤츠",model:"EQB 300 4MATIC(Facelift)(CY25/2)",bn:162,bl:112,cn:32,cl:10},
+{cat:"passenger",maker:"폭스바겐",model:"Q4 45 e-tron",bn:206,bl:142,cn:41,cl:12},
+{cat:"passenger",maker:"폭스바겐",model:"Q4 Sportback 45 e-tron",bn:206,bl:142,cn:41,cl:12},
+{cat:"passenger",maker:"폭스바겐",model:"Q6 e-tron performance",bn:220,bl:151,cn:44,cl:13},
+{cat:"passenger",maker:"폭스바겐",model:"ID.4 Pro",bn:432,bl:297,cn:86,cl:26},
+{cat:"passenger",maker:"KG모빌리티",model:"토레스 EVX 2WD 18인치",bn:327,bl:225,cn:65,cl:20},
+{cat:"passenger",maker:"KG모빌리티",model:"토레스 EVX 2WD 20인치",bn:312,bl:215,cn:62,cl:19},
+{cat:"passenger",maker:"KG모빌리티",model:"토레스 EVX 18인치",bn:354,bl:244,cn:71,cl:21},
+{cat:"passenger",maker:"KG모빌리티",model:"토레스 EVX 20인치",bn:344,bl:237,cn:69,cl:21},
+{cat:"passenger",maker:"KG모빌리티",model:"토레스 EVX 18인치(2026)",bn:361,bl:248,cn:72,cl:22},
+{cat:"passenger",maker:"KG모빌리티",model:"토레스 EVX 20인치(2026)",bn:354,bl:244,cn:71,cl:21},
+{cat:"passenger",maker:"볼보",model:"볼보 EX30 Single Motor ER",bn:247,bl:170,cn:49,cl:15},
+{cat:"passenger",maker:"볼보",model:"볼보 EX30CC Twin Motor Perf",bn:222,bl:153,cn:44,cl:13},
+{cat:"passenger",maker:"BYD",model:"BYD ATTO 3",bn:126,bl:86,cn:25,cl:8},
+{cat:"passenger",maker:"BYD",model:"BYD SEALION 7",bn:152,bl:104,cn:30,cl:9},
+{cat:"passenger",maker:"BYD",model:"BYD SEAL",bn:169,bl:116,cn:34,cl:10},
+{cat:"passenger",maker:"BYD",model:"BYD SEAL Dynamic AWD",bn:151,bl:104,cn:30,cl:9},
+{cat:"passenger",maker:"BYD",model:"BYD DOLPHIN",bn:109,bl:75,cn:22,cl:7},
+{cat:"passenger",maker:"BYD",model:"BYD DOLPHIN Active",bn:132,bl:91,cn:26,cl:8},
+// ── 경·소형 ──
+{cat:"small",maker:"기아",model:"레이 EV 2WD 14인치 4인승 승용",bn:457,bl:344,cn:91,cl:27},
+{cat:"small",maker:"기아",model:"레이 EV 2WD 14인치 2인승 밴",bn:457,bl:344,cn:91,cl:27},
+{cat:"small",maker:"기아",model:"레이 EV 2WD 14인치 1인승 밴",bn:457,bl:344,cn:91,cl:27},
+{cat:"small",maker:"현대",model:"캐스퍼 일렉트릭 항속형 17인치(라운지포함)",bn:490,bl:369,cn:98,cl:29},
+{cat:"small",maker:"현대",model:"캐스퍼 일렉트릭 항속형 15인치",bn:490,bl:369,cn:98,cl:29},
+{cat:"small",maker:"현대",model:"캐스퍼 일렉트릭 기본형 15인치",bn:490,bl:369,cn:98,cl:29},
+{cat:"small",maker:"현대",model:"캐스퍼 일렉트릭 크로스 17인치",bn:487,bl:367,cn:97,cl:29},
+// ── 화물(초소형) ──
+{cat:"cargo_mini",maker:"디피코",model:"포트로-탑S",bn:380,bl:266,cn:45,cl:14},
+{cat:"cargo_mini",maker:"디피코",model:"포트로-픽업S",bn:380,bl:266,cn:45,cl:14},
+// ── 화물(소형) ──
+{cat:"cargo",maker:"현대",model:"포터Ⅱ 일렉트릭 하이내장탑차",bn:780,bl:546,cn:92,cl:28},
+{cat:"cargo",maker:"현대",model:"포터Ⅱ 일렉트릭 저상내장탑차",bn:780,bl:546,cn:92,cl:28},
+{cat:"cargo",maker:"현대",model:"포터Ⅱ 일렉트릭 내장탑차",bn:780,bl:546,cn:92,cl:28},
+{cat:"cargo",maker:"현대",model:"포터Ⅱ 일렉트릭",bn:968,bl:677,cn:100,cl:30},
+{cat:"cargo",maker:"현대",model:"포터Ⅱ 일렉트릭 파워게이트",bn:780,bl:546,cn:92,cl:28},
+{cat:"cargo",maker:"현대",model:"포터Ⅱ 일렉트릭 전동식 윙바디",bn:780,bl:546,cn:92,cl:28},
+{cat:"cargo",maker:"현대",model:"포터Ⅱ 일렉트릭 수동식 윙바디",bn:780,bl:546,cn:92,cl:28},
+{cat:"cargo",maker:"현대",model:"ST1 기본형 카고",bn:1200,bl:840,cn:100,cl:30},
+{cat:"cargo",maker:"현대",model:"ST1 기본형 하이탑",bn:1100,bl:770,cn:100,cl:30},
+{cat:"cargo",maker:"현대",model:"ST1 기본형 카고냉동",bn:1450,bl:1015,cn:100,cl:30},
+{cat:"cargo",maker:"현대",model:"스타리아 카고 일렉트릭 5인승",bn:1200,bl:840,cn:100,cl:30},
+{cat:"cargo",maker:"기아",model:"봉고 전기차",bn:1000,bl:700,cn:100,cl:30},
+{cat:"cargo",maker:"기아",model:"봉고 전기차 냉동탑차",bn:1172,bl:820,cn:100,cl:30},
+{cat:"cargo",maker:"기아",model:"봉고 전기차 양문형 미닫이탑차",bn:822,bl:575,cn:97,cl:29},
+{cat:"cargo",maker:"기아",model:"봉고 전기차 로우 양문형 미닫이탑차",bn:822,bl:575,cn:97,cl:29},
+{cat:"cargo",maker:"기아",model:"봉고 전기차 턴인형 파워게이트",bn:822,bl:575,cn:97,cl:29},
+{cat:"cargo",maker:"기아",model:"봉고 전기차 수직형 파워게이트",bn:822,bl:575,cn:97,cl:29},
+{cat:"cargo",maker:"기아",model:"봉고 전기차 내장탑차",bn:822,bl:575,cn:97,cl:29},
+{cat:"cargo",maker:"기아",model:"봉고 전기차 전동식 윙바디",bn:822,bl:575,cn:97,cl:29},
+{cat:"cargo",maker:"기아",model:"봉고 전기차 수동식 윙바디",bn:822,bl:575,cn:97,cl:29},
+{cat:"cargo",maker:"기아",model:"PV5 카고 롱 롱레인지 4도어",bn:1150,bl:805,cn:100,cl:30},
+{cat:"cargo",maker:"기아",model:"PV5 카고 롱 롱레인지 3도어",bn:1150,bl:805,cn:100,cl:30},
+{cat:"cargo",maker:"기아",model:"PV5 카고 롱 스탠다드 4도어",bn:1000,bl:700,cn:100,cl:30},
+{cat:"cargo",maker:"기아",model:"PV5 카고 롱 스탠다드 3도어",bn:1000,bl:700,cn:100,cl:30},
+{cat:"cargo",maker:"기아",model:"봉고 전기차 하이 내장탑차",bn:822,bl:575,cn:97,cl:29},
+{cat:"cargo",maker:"기아",model:"봉고 전기차 로우 내장탑차",bn:822,bl:575,cn:97,cl:29},
+{cat:"cargo",maker:"기아",model:"봉고 전기차 하이 냉동탑차",bn:1172,bl:820,cn:100,cl:30},
+{cat:"cargo",maker:"기아",model:"봉고 전기차 로우 냉동탑차",bn:1172,bl:820,cn:100,cl:30},
+{cat:"cargo",maker:"기아",model:"PV5 오픈베드 스탠다드",bn:1000,bl:700,cn:100,cl:30},
+{cat:"cargo",maker:"기아",model:"PV5 오픈베드 롱레인지",bn:1150,bl:805,cn:100,cl:30},
+{cat:"cargo",maker:"일진정공",model:"일진무시동전기냉동탑차(포터)",bn:1154,bl:807,cn:100,cl:30},
+{cat:"cargo",maker:"일진정공",model:"일진무시동전기냉동탑차(ST1)",bn:1450,bl:1015,cn:100,cl:30},
+{cat:"cargo",maker:"일진정공",model:"일진무시동전기탑차(ST1)",bn:1100,bl:770,cn:100,cl:30},
+{cat:"cargo",maker:"일진정공",model:"일진무시동전기 냉동탑차(봉고)",bn:1186,bl:830,cn:100,cl:30},
+{cat:"cargo",maker:"오텍",model:"오텍ST1 초경량 냉동탑차",bn:1450,bl:1015,cn:100,cl:30},
+{cat:"cargo",maker:"한국쓰리축",model:"한국쓰리축1톤롱바디EV트럭(봉고)",bn:816,bl:571,cn:96,cl:29},
+{cat:"cargo",maker:"한국쓰리축",model:"한국쓰리축1톤ST1트럭",bn:1200,bl:840,cn:100,cl:30},
+{cat:"cargo",maker:"KG모빌리티",model:"토레스 EVX VAN 20인치",bn:312,bl:218,cn:37,cl:11},
+{cat:"cargo",maker:"KG모빌리티",model:"토레스 EVX VAN 18인치",bn:314,bl:219,cn:37,cl:11},
+{cat:"cargo",maker:"KG모빌리티",model:"MUSSO EV 2WD 17인치",bn:639,bl:447,cn:75,cl:23},
+{cat:"cargo",maker:"KG모빌리티",model:"MUSSO EV AWD 17인치",bn:618,bl:432,cn:73,cl:22},
+{cat:"cargo",maker:"KG모빌리티",model:"토레스 EVX 밴 20인치",bn:344,bl:240,cn:40,cl:12},
+{cat:"cargo",maker:"KG모빌리티",model:"토레스 EVX 밴 18인치",bn:348,bl:243,cn:41,cl:12},
+{cat:"cargo",maker:"KG모빌리티",model:"토레스 EVX 밴 18인치(2026)",bn:355,bl:248,cn:42,cl:13},
+];
+
+// 현재 필터링된 모델 목록
+let filteredModels = [];
+
+// 초기 설정
+document.getElementById('totalCount').textContent = VEHICLES.length;
+
+// ── 상태 ──
+let S = {};
+function initState(){
+  S = {
+    buyerType:'individual', history:'none', addChecks:{},
+    dieselCargo:'none', dieselHandle:'', dieselDisposeDate:'',
+    iceCar:'no', iceCarTouched:false, convertVehicle:'', convertFuel:'',
+    reg3yr:'', own3yr:'', convertDispose:'', convertDisposeDate:'',
+    convertFinalTarget:false, _pendingDispose:''
+  };
+}
+initState();
+
+// ── 유틸 ──
+function qAll(sel,fn){document.querySelectorAll(sel).forEach(fn)}
+function el(id){return document.getElementById(id)}
+function showAlert(id,show){let e=el(id);if(e)e.classList.toggle('show',show)}
+
+// ── 초기화 ──
+function resetAll(){
+  initState();
+  setActive('#buyerTypeGroup','individual');
+  setActive('#historyGroup','none');
+  el('carCat').value='';
+  el('maker').innerHTML='<option value="" disabled selected>선택</option>';
+  el('model').innerHTML='<option value="" disabled selected>선택</option>';
+  filteredModels=[];
+  el('selectedCarInfo').classList.add('hidden');
+  onCatChange();
+  showAlert('carTypeAlert',false);
+  renderAddSupport();
+  el('dieselCargoSection').classList.add('hidden');
+  el('dieselCargoSub').classList.add('hidden');
+  el('dieselDisposeDateArea').classList.add('hidden');
+  showAlert('dieselKeepAlert',false);
+  setActive('#dieselCargoGroup','');
+  setActive('#dieselCargoHandleGroup','');
+  setActive('#dieselDisposeDateGroup','');
+  setActive('#iceCarGroup','no');
+  el('iceCarDetail').classList.add('hidden');
+  resetConvertUI();
+  updateConvertEligByBuyer();
+  calculate();
+  el('docsSection').classList.remove('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── STEP1 ──
+function selectBuyerType(btn){
+  qAll('#buyerTypeGroup .ob',b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  S.buyerType=btn.dataset.val;
+  updateConvertEligByBuyer();
+  renderAddSupport();
+  calculate();
+}
+function updateConvertEligByBuyer(){
+  let isIndividual=S.buyerType==='individual';
+  let alertEl=el('convertBuyerAlert');
+  let iceGroup=el('iceCarGroup');
+  let iceDetail=el('iceCarDetail');
+  if(!isIndividual){
+    // 비활성화: 알림 표시, 버튼·하위 영역 전체 잠금 및 초기화
+    alertEl.classList.add('show');
+    iceGroup.style.opacity='0.35';
+    iceGroup.style.pointerEvents='none';
+    iceDetail.style.opacity='0.35';
+    iceDetail.style.pointerEvents='none';
+    // 보유안함으로 강제 초기화
+    S.iceCar='no';
+    setActive('#iceCarGroup','no');
+    iceDetail.classList.add('hidden');
+    resetConvertUI();
+  } else {
+    alertEl.classList.remove('show');
+    iceGroup.style.opacity='';
+    iceGroup.style.pointerEvents='';
+    iceDetail.style.opacity='';
+    iceDetail.style.pointerEvents='';
+  }
+}
+function selectHistory(btn){
+  qAll('#historyGroup .ob',b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  S.history=btn.dataset.val;
+  checkConflict();
+  calculate();
+}
+function setActive(groupSel,val){
+  qAll(groupSel+' .ob',b=>b.classList.toggle('active',b.dataset.val===val));
+}
+
+// ── STEP2 ──
+// 화면의 승용/화물 → 실제 cat 배열 매핑
+function getCats(uiCat){
+  if(uiCat==='passenger') return ['passenger','small'];
+  if(uiCat==='cargo') return ['cargo','cargo_mini'];
+  return [];
+}
+
+function onCatChange(){
+  // 제조사·모델 초기화
+  let ms=el('maker');
+  ms.innerHTML='<option value="" disabled selected>선택</option>';
+  let mm=el('model');
+  mm.innerHTML='<option value="" disabled selected>선택</option>';
+  filteredModels=[];
+  el('selectedCarInfo').classList.add('hidden');
+
+  let uiCat=el('carCat').value;
+  if(!uiCat){ checkConflict(); renderAddSupport(); toggleDieselSection(); calculate(); return; }
+  updateMakers();
+  checkConflict();
+  renderAddSupport();
+  toggleDieselSection();
+  calculate();
+}
+
+function checkConflict(){
+  let uiCat=el('carCat').value;
+  let isPassenger = uiCat==='passenger';
+  let isCargo = uiCat==='cargo';
+  let conflict = (S.history==='passenger'&&isPassenger)||(S.history==='cargo'&&isCargo);
+  showAlert('carTypeAlert',conflict);
+  return conflict;
+}
+
+function updateMakers(){
+  let uiCat=el('carCat').value;
+  if(!uiCat) return;
+  let cats=getCats(uiCat);
+  let makers=[...new Set(VEHICLES.filter(v=>cats.includes(v.cat)).map(v=>v.maker))];
+  makers.sort((a,b)=>a.localeCompare(b,'ko'));
+  let ms=el('maker');
+  ms.innerHTML='<option value="" disabled selected>선택</option>';
+  makers.forEach(m=>{
+    let o=document.createElement('option');
+    o.value=m; o.textContent=m; ms.appendChild(o);
+  });
+  // 모델도 초기화
+  let mm=el('model');
+  mm.innerHTML='<option value="" disabled selected>선택</option>';
+  filteredModels=[];
+  el('selectedCarInfo').classList.add('hidden');
+}
+
+function updateModels(){
+  let uiCat=el('carCat').value;
+  let maker=el('maker').value;
+  let mm=el('model');
+  mm.innerHTML='<option value="" disabled selected>선택</option>';
+  filteredModels=[];
+  el('selectedCarInfo').classList.add('hidden');
+  if(!uiCat||!maker){ calculate(); return; }
+  let cats=getCats(uiCat);
+  filteredModels=VEHICLES.filter(v=>cats.includes(v.cat)&&v.maker===maker);
+  filteredModels.sort((a,b)=>a.model.localeCompare(b.model,'ko'));
+  filteredModels.forEach((v,i)=>{
+    let o=document.createElement('option');
+    o.value=i; o.textContent=v.model; mm.appendChild(o);
+  });
+  calculate();
+}
+
+function filterModels(){
+  updateModels();
+}
+
+// ── STEP3 추가보조금 ──
+function renderAddSupport(){
+  let cat=el('carCat').value;
+  let isPassenger=cat==='passenger';
+  let isCargo=cat==='cargo';
+  let bt=S.buyerType;
+  S.addChecks={};
+  let opts=[], multi=true;
+
+  if(isPassenger){
+    if(bt==='individual') opts=[
+      {id:'none',label:'추가지원 없음',exclusive:true},
+      {id:'young',label:'청년 생애최초',rate:.2,note:'국비의 20%'},
+      {id:'low',label:'차상위 이하 계층',rate:.2,note:'국비의 20%'},
+      {id:'multi',label:'다자녀가구',note:'자녀수 선택'}
+    ];
+    else if(bt==='individual_biz'){
+      multi=false;
+      opts=[{id:'none',label:'추가지원 없음',exclusive:true},{id:'taxi',label:'택시',amount:250}];
+    } else {
+      opts=[{id:'none',label:'추가지원 없음 (자동)',exclusive:true,auto:true}];
+      S.addChecks.none=true;
+    }
+  } else {
+    if(bt==='individual') opts=[
+      {id:'none',label:'추가지원 없음',exclusive:true},
+      {id:'low',label:'차상위 이하 계층',rate:.3,note:'국비의 30%'},
+      {id:'farmer',label:'농업인',rate:.1,note:'국비의 10%'}
+    ];
+    else if(bt==='individual_biz') opts=[
+      {id:'none',label:'추가지원 없음',exclusive:true},
+      {id:'smallbiz',label:'소상공인',rate:.3,note:'국비의 30%'},
+      {id:'farmer',label:'농업인',rate:.1,note:'국비의 10%'},
+      {id:'delivery',label:'택배용',rate:.1,note:'국비의 10%'}
+    ];
+    else opts=[
+      {id:'none',label:'추가지원 없음',exclusive:true},
+      {id:'smallbiz',label:'소상공인',rate:.3,note:'국비의 30%'},
+      {id:'delivery',label:'택배용',rate:.1,note:'국비의 10%'}
+    ];
+  }
+
+  let area=el('addSupportArea');
+  area.dataset.options=JSON.stringify(opts);
+  area.dataset.multi=multi?'true':'false';
+
+  let html=`<div class="fd"><label>추가지원 대상</label><div class="copts" id="addCheckGroup">`;
+  opts.forEach(opt=>{
+    let isAuto=opt.auto?'checked disabled':'';
+    let amtStr=opt.rate?`(${opt.note})`:opt.amount?`${opt.amount}만원`:'';
+    html+=`<div class="copt ${isAuto}" id="addopt_${opt.id}" onclick="toggleAdd('${opt.id}')">
+      <div class="cb"></div><span class="cl">${opt.label}</span><span class="ca">${amtStr}</span>
+    </div>`;
+  });
+  html+=`</div></div>`;
+
+  if(isPassenger&&bt==='individual'){
+    html+=`<div id="multiChildSub" class="hidden" style="margin-top:8px">
+      <div class="sub">
+        <div class="slbl">자녀 수 선택 (1개만 선택)</div>
+        <div class="copts" id="childGroup">
+          <div class="copt" id="addopt_child2" onclick="selectChild('child2')"><div class="cb"></div><span class="cl">2자녀</span><span class="ca">100만원</span></div>
+          <div class="copt" id="addopt_child3" onclick="selectChild('child3')"><div class="cb"></div><span class="cl">3자녀</span><span class="ca">200만원</span></div>
+          <div class="copt" id="addopt_child4" onclick="selectChild('child4')"><div class="cb"></div><span class="cl">4자녀 이상</span><span class="ca">300만원</span></div>
+        </div>
+      </div>
+    </div>`;
+  }
+  area.innerHTML=html;
+  calculate();
+}
+
+function toggleAdd(id){
+  let area=el('addSupportArea');
+  let opts=JSON.parse(area.dataset.options||'[]');
+  let multi=area.dataset.multi==='true';
+  if(id==='none'){
+    S.addChecks={};
+    S.addChecks.none?delete S.addChecks.none:S.addChecks.none=true;
+    let mcs=el('multiChildSub');
+    if(mcs) mcs.classList.add('hidden');
+    ['child2','child3','child4'].forEach(c=>delete S.addChecks[c]);
+  } else {
+    if(S.addChecks.none) delete S.addChecks.none;
+    if(S.addChecks[id]){
+      delete S.addChecks[id];
+      if(id==='multi'){let mcs=el('multiChildSub');if(mcs)mcs.classList.add('hidden');['child2','child3','child4'].forEach(c=>delete S.addChecks[c]);}
+    } else {
+      if(!multi) S.addChecks={};
+      S.addChecks[id]=true;
+      if(id==='multi'){let mcs=el('multiChildSub');if(mcs)mcs.classList.remove('hidden');}
+    }
+  }
+  opts.forEach(o=>{let e=el('addopt_'+o.id);if(e)e.classList.toggle('checked',!!S.addChecks[o.id]);});
+  el('addopt_none')?.classList.toggle('checked',!!S.addChecks.none);
+  calculate();
+}
+
+function selectChild(id){
+  ['child2','child3','child4'].forEach(c=>{delete S.addChecks[c];el('addopt_'+c)?.classList.remove('checked');});
+  S.addChecks[id]=true;
+  el('addopt_'+id)?.classList.add('checked');
+  calculate();
+}
+
+// ── 경유화물차 ──
+function toggleDieselSection(){
+  let cat=el('carCat').value;
+  let isCargo=cat==='cargo';
+  el('dieselCargoSection').classList.toggle('hidden',!isCargo);
+  if(!isCargo){S.dieselCargo='none';S.dieselHandle='';S.dieselDisposeDate='';}
+}
+
+function selectDieselCargo(btn){
+  qAll('#dieselCargoGroup .ob',b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  S.dieselCargo=btn.dataset.val;
+  S.dieselHandle='';S.dieselDisposeDate='';
+  el('dieselCargoSub').classList.toggle('hidden',S.dieselCargo!=='has');
+  el('dieselDisposeDateArea').classList.add('hidden');
+  qAll('#dieselCargoHandleGroup .ob',b=>b.classList.remove('active'));
+  qAll('#dieselDisposeDateGroup .ob',b=>b.classList.remove('active'));
+  if(S.dieselCargo==='has') autoSetConvertForDieselCargo();
+  else resetConvertUI();
+  calculate();
+}
+
+function selectDieselHandle(btn){
+  qAll('#dieselCargoHandleGroup .ob',b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  S.dieselHandle=btn.dataset.val;
+  S.dieselDisposeDate='';
+  qAll('#dieselDisposeDateGroup .ob',b=>b.classList.remove('active'));
+  let isDispose=S.dieselHandle==='sell'||S.dieselHandle==='export'||S.dieselHandle==='scrap';
+  let kAlert=el('dieselKeepAlert');
+  if(kAlert){kAlert.style.display=S.dieselHandle==='keep'?'flex':'none';}
+  el('dieselDisposeDateArea').classList.toggle('hidden',!isDispose);
+  if(isDispose) syncConvertDisposeFromDiesel();
+  calculate();
+}
+
+function selectDieselDisposeDate(btn){
+  qAll('#dieselDisposeDateGroup .ob',b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  S.dieselDisposeDate=btn.dataset.val;
+  calculate();
+}
+
+function autoSetConvertForDieselCargo(){
+  // 비개인 구매자는 전환지원금 비대상 → iceCarDetail 열지 않음
+  let isIndividual=S.buyerType==='individual';
+  S.iceCar='yes';
+  S.iceCarTouched=true;
+  setActive('#iceCarGroup','yes');
+  if(!isIndividual) return;
+  el('iceCarDetail').classList.remove('hidden');
+  S.convertVehicle='cargo';
+  setActive('#convertVehicleGroup','cargo');
+  el('convertVehicleAlert').classList.remove('show');
+  el('convertFuelArea').classList.remove('hidden');
+  S.convertFuel='diesel';
+  setActive('#convertFuelGroup','diesel');
+  el('convertFuelAlert').classList.remove('show');
+  el('convertOwnerArea').classList.remove('hidden');
+}
+
+function syncConvertDisposeFromDiesel(){
+  if(!S_convert3yrOk()) return;
+  let dval={sell:'sell',export:'export',scrap:'scrap'}[S.dieselHandle];
+  if(dval){
+    S.convertDispose=dval;
+    setActive('#convertDisposeGroup',dval);
+    el('convertKeepAlert').classList.remove('show');
+    el('convertDisposeDateArea').classList.remove('hidden');
+  }
+}
+
+// ── STEP4 전환지원금 ──
+function resetConvertUI(){
+  S.convertVehicle='';S.convertFuel='';S.reg3yr='';S.own3yr='';
+  S.convertDispose='';S.convertDisposeDate='';S.convertFinalTarget=false;S.iceCarTouched=false;
+  qAll('#convertVehicleGroup .ob,#convertFuelGroup .ob,#reg3yrGroup .ob,#own3yrGroup .ob,#convertDisposeGroup .ob,#convertDisposeDateGroup .ob',b=>b.classList.remove('active'));
+  ['convertVehicleAlert','convertFuelAlert','convertEligAlert','convertEligOk','convertKeepAlert','convertDisposeDateAlert'].forEach(id=>showAlert(id,false));
+  ['convertFuelArea','convertOwnerArea','convertDisposeArea','convertDisposeDateArea'].forEach(id=>el(id).classList.add('hidden'));
+  el('convertFuelAlert').className='alert';
+  el('reg3yrBadge').innerHTML='';
+  el('own3yrBadge').innerHTML='';
+}
+
+function selectIceCar(btn){
+  qAll('#iceCarGroup .ob',b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  S.iceCar=btn.dataset.val;
+  S.iceCarTouched=true;
+  el('iceCarDetail').classList.toggle('hidden',S.iceCar!=='yes');
+  if(S.iceCar!=='yes') resetConvertUI();
+  calculate();
+}
+
+function selectConvertVehicle(btn){
+  qAll('#convertVehicleGroup .ob',b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  S.convertVehicle=btn.dataset.val;
+  S.convertFuel='';S.reg3yr='';S.own3yr='';S.convertDispose='';S.convertDisposeDate='';S.convertFinalTarget=false;
+  let ok=S.convertVehicle!=='other';
+  showAlert('convertVehicleAlert',!ok);
+  el('convertFuelArea').classList.toggle('hidden',!ok);
+  if(!ok){el('convertOwnerArea').classList.add('hidden');el('convertDisposeArea').classList.add('hidden');}
+  qAll('#convertFuelGroup .ob',b=>b.classList.remove('active'));
+  showAlert('convertFuelAlert',false);
+  el('convertFuelAlert').className='alert';
+  el('convertOwnerArea').classList.add('hidden');
+  el('convertDisposeArea').classList.add('hidden');
+  calculate();
+}
+
+function selectConvertFuel(btn){
+  qAll('#convertFuelGroup .ob',b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  S.convertFuel=btn.dataset.val;
+  S.reg3yr='';S.own3yr='';S.convertDispose='';S.convertDisposeDate='';S.convertFinalTarget=false;
+  qAll('#reg3yrGroup .ob,#own3yrGroup .ob',b=>b.classList.remove('active'));
+  ['convertEligAlert','convertEligOk','convertKeepAlert','convertDisposeDateAlert'].forEach(id=>showAlert(id,false));
+  el('convertDisposeArea').classList.add('hidden');
+  el('convertDisposeDateArea').classList.add('hidden');
+  let fa=el('convertFuelAlert');
+  if(S.convertFuel==='hybrid'){
+    fa.textContent='전환지원금 대상이 아닙니다.';fa.className='alert err show';
+    el('convertOwnerArea').classList.add('hidden');
+  } else if(S.convertFuel==='etc'){
+    fa.textContent='여주시에 문의 바랍니다.';fa.className='alert warn show';
+    el('convertOwnerArea').classList.add('hidden');
+  } else {
+    fa.classList.remove('show');fa.className='alert';
+    el('convertOwnerArea').classList.remove('hidden');
+  }
+  calculate();
+}
+
+function S_convert3yrOk(){return S.reg3yr==='pass'&&S.own3yr==='pass';}
+
+function updateEligAlert(){
+  if(!(S.reg3yr!==''&&S.own3yr!=='')){
+    showAlert('convertEligAlert',false);showAlert('convertEligOk',false);
+    el('convertDisposeArea').classList.add('hidden');return;
+  }
+  let ok=S_convert3yrOk();
+  showAlert('convertEligAlert',!ok);showAlert('convertEligOk',ok);
+  el('convertDisposeArea').classList.toggle('hidden',!ok);
+  if(!ok){S.convertDispose='';S.convertDisposeDate='';S.convertFinalTarget=false;}
+}
+
+function updateYrBadge(elId,val){
+  let b=el(elId);
+  if(!val){b.innerHTML='';return;}
+  b.innerHTML=val==='pass'?'<span class="badge ok">충족</span>':'<span class="badge ng">미충족</span>';
+}
+
+function selectReg3yr(btn){
+  qAll('#reg3yrGroup .ob',b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  S.reg3yr=btn.dataset.val;
+  updateYrBadge('reg3yrBadge',S.reg3yr);
+  updateEligAlert();calculate();
+}
+
+function selectOwn3yr(btn){
+  qAll('#own3yrGroup .ob',b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  S.own3yr=btn.dataset.val;
+  updateYrBadge('own3yrBadge',S.own3yr);
+  updateEligAlert();calculate();
+}
+
+function selectConvertDispose(btn){
+  qAll('#convertDisposeGroup .ob',b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  let val=btn.dataset.val;
+  S.convertDispose=val;S.convertDisposeDate='';S.convertFinalTarget=false;
+  qAll('#convertDisposeDateGroup .ob',b=>b.classList.remove('active'));
+  showAlert('convertKeepAlert',val==='keep');
+  showAlert('convertDisposeDateAlert',false);
+  el('convertDisposeDateArea').classList.toggle('hidden',val==='keep');
+  calculate();
+}
+
+function selectConvertDisposeDate(btn){
+  qAll('#convertDisposeDateGroup .ob',b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  S.convertDisposeDate=btn.dataset.val;
+  showAlert('convertDisposeDateAlert',S.convertDisposeDate==='before_pay');
+  if(S.convertDisposeDate==='before_apply'){S.convertFinalTarget=true;calculate();}
+  else if(S.convertDisposeDate==='before_pay') el('disposeModal').classList.add('show');
+}
+
+function disposeModalCancel(){
+  el('disposeModal').classList.remove('show');
+  S.convertFinalTarget=false;S.convertDisposeDate='';
+  qAll('#convertDisposeDateGroup .ob',b=>b.classList.remove('active'));
+  showAlert('convertDisposeDateAlert',false);calculate();
+}
+
+function disposeModalConfirm(){
+  el('disposeModal').classList.remove('show');
+  S.convertFinalTarget=true;calculate();
+}
+
+// ── 계산 ──
+function calculate(){
+  if(checkConflict()){
+    ['basicDetail','addDetail','convertDetail2'].forEach(id=>el(id).textContent='-');
+    ['basicAmount','addAmount','convertAmount'].forEach(id=>el(id).textContent='-');
+    el('finalTotal').textContent='- 만원';
+    el('selectedCarInfo').classList.add('hidden');
+    return;
+  }
+
+  let mi=parseInt(el('model').value);
+  let data=(isNaN(mi)||filteredModels.length===0)?null:filteredModels[mi];
+
+  if(!data){
+    el('selectedCarInfo').classList.add('hidden');
+    el('basicDetail').textContent='차량을 선택해주세요';
+    el('basicAmount').textContent='-';
+    el('addDetail').textContent='구매자 조건을 선택해주세요';
+    el('addAmount').textContent='-';
+    el('convertDetail2').textContent='전환지원금 조건을 선택해주세요';
+    el('convertAmount').textContent='-';
+    el('finalTotal').textContent='- 만원';
+    return;
+  }
+
+  // 단위 표기 헬퍼 (만원, 소수점1자리)
+  function fmt(v){return (Math.round(v*10)/10).toLocaleString('ko-KR',{minimumFractionDigits:1,maximumFractionDigits:1})+'만원';}
+
+  // 선택 차량 정보 카드
+  el('selectedCarInfo').classList.remove('hidden');
+  el('selectedCarDetail').innerHTML =
+    `<b>${data.model}</b><br>` +
+    `기본보조금: 국비 ${fmt(data.bn)} + 지방비 ${fmt(data.bl)} = <b>${fmt(data.bn+data.bl)}</b><br>` +
+    `전환지원금: 국비 ${fmt(data.cn)} + 지방비 ${fmt(data.cl)} = <b>${fmt(data.cn+data.cl)}</b>`;
+
+  // ① 기본보조금
+  let deductN=0,deductL=0,noticeText='';
+  let cat=el('carCat').value;
+  let isCargo=cat==='cargo';
+  if(isCargo&&S.dieselCargo==='has'&&S.dieselHandle==='keep'){
+    deductN=50;deductL=35;noticeText='성능보조금 차감이 적용되었습니다. (국비 -50만원, 지방비 -35만원)';
+  }
+  let adjN=data.bn-deductN,adjL=data.bl-deductL,basicTotal=adjN+adjL;
+  el('basicDetail').innerHTML=`${data.model} | 국비 ${fmt(adjN)} + 지방비 ${fmt(adjL)}`;
+  el('basicAmount').textContent=`합계 ${fmt(basicTotal)}`;
+  let notice=el('basicNotice');
+  notice.style.display=noticeText?'block':'none';
+  notice.textContent=noticeText;
+
+  // ② 추가보조금
+  let area=el('addSupportArea');
+  let opts=JSON.parse(area.dataset.options||'[]');
+  let addTotal=0,addLines=[];
+  if(!S.addChecks.none){
+    opts.forEach(opt=>{
+      if(!S.addChecks[opt.id]||opt.id==='none'||opt.id==='multi') return;
+      if(opt.rate!=null){let amt=Math.round(adjN*opt.rate*10)/10;addTotal+=amt;addLines.push(`${opt.label}: ${fmt(amt)}`);}
+      else if(opt.amount){addTotal+=opt.amount;addLines.push(`${opt.label}: ${fmt(opt.amount)}`);}
+    });
+    [['child2',100,'다자녀(2자녀)'],['child3',200,'다자녀(3자녀)'],['child4',300,'다자녀(4자녀이상)']].forEach(([k,a,l])=>{
+      if(S.addChecks[k]){addTotal+=a;addLines.push(`${l}: ${fmt(a)}`);}
+    });
+  }
+  el('addDetail').innerHTML=addLines.length?addLines.join('<br>'):'추가보조금 없음';
+  el('addAmount').textContent=`합계 ${fmt(addTotal)}`;
+
+  // ③ 전환지원금
+  let convertTotal=0;
+  if(!S.iceCarTouched){
+    // STEP4 미조작 상태 → 초기 안내 문구 유지
+    el('convertDetail2').textContent='전환지원금 조건을 선택해주세요';
+    el('convertAmount').textContent='-';
+  } else if(S.iceCar==='yes'&&
+     (S.convertVehicle==='passenger'||S.convertVehicle==='cargo')&&
+     S.convertFuel&&S.convertFuel!=='hybrid'&&S.convertFuel!=='etc'&&
+     S_convert3yrOk()&&S.convertDispose!=='keep'&&S.convertDispose!==''&&
+     S.convertFinalTarget){
+    // 경유화물+계속보유 시 전환지원금 국비도 adjN 기준 요율 적용
+    let cnBase = (isCargo&&S.dieselCargo==='has'&&S.dieselHandle==='keep')
+      ? Math.round(adjN*(data.cn/data.bn)*10)/10
+      : data.cn;
+    convertTotal=cnBase+data.cl;
+    el('convertDetail2').innerHTML=`국비 ${fmt(cnBase)} + 시비 ${fmt(data.cl)}`;
+    el('convertAmount').textContent=`합계 ${fmt(convertTotal)}`;
+  } else if(S.iceCar==='no'){
+    el('convertDetail2').textContent='내연기관차 미보유 (비대상)';
+    el('convertAmount').textContent='0.0만원';
+  } else if(S.convertDispose==='keep'){
+    el('convertDetail2').textContent='계속 보유 - 비대상';
+    el('convertAmount').textContent='0.0만원';
+  } else {
+    el('convertDetail2').textContent='조건 확인 중';
+    el('convertAmount').textContent='0.0만원';
+  }
+
+  el('finalTotal').textContent=fmt(basicTotal+addTotal+convertTotal);
+}
+
+// ── 필요서류 ──
+function toggleDocs(){
+  let sec=el('docsSection');
+  if(sec.classList.toggle('show'),!sec.classList.contains('show')) return;
+  let cat=el('carCat').value;
+  let bt=S.buyerType;
+  let html='';
+  let common=['구매지원 신청서','차량 구매계약서'];
+  if(bt==='individual') common.push('주민등록초본 (주소변동이력 포함)');
+  else if(bt==='individual_biz') common.push('주민등록초본 (주소변동이력 포함)','사업자등록증');
+  else common.push('법인등기부등본 (주소변동이력 포함)','사업자등록증');
+  html+=`<div class="docs-group"><div class="docs-group-title">공통 서류</div><ul>`;
+  common.forEach(i=>html+=`<li>${i}</li>`);
+  html+=`</ul></div>`;
+  let extra=[];
+  if(S.addChecks.low) extra.push('기초생활수급자 증명서 또는 차상위계층 확인서');
+  if(S.addChecks.smallbiz) extra.push('소상공인확인서 (중소기업현황정보시스템에서 발급 가능)');
+  if(S.addChecks.child2||S.addChecks.child3||S.addChecks.child4||S.addChecks.multi) extra.push('가족관계증명서');
+  if(S.addChecks.young) extra.push('지방세 세목별 과세증명서 (자동차 관련 비과세증명 서류)');
+  if(S.addChecks.taxi) extra.push('여객운수사업허가증','사업자등록증 (택시)');
+  if(S.addChecks.delivery) extra.push('화물운수사업허가증','사업자등록증 (택배)');
+  if(S.addChecks.farmer) extra.push('농업경영체 등록확인서');
+  if(extra.length){
+    html+=`<div class="docs-group"><div class="docs-group-title">추가 서류 (우선 및 추가지원 대상)</div><ul>`;
+    extra.forEach(i=>html+=`<li>${i}</li>`);
+    html+=`</ul></div>`;
+  }
+  if(S.iceCar==='yes'&&(S.convertVehicle==='passenger'||S.convertVehicle==='cargo')&&
+     S.convertFuel&&S.convertFuel!=='hybrid'&&S.convertFuel!=='etc'&&
+     S_convert3yrOk()&&S.convertDispose!=='keep'&&S.convertDispose!==''&&S.convertFinalTarget){
+    html+=`<div class="docs-group"><div class="docs-group-title">전환지원금 서류</div><ul>`;
+    let isSell=S.convertDispose==='sell';
+    let isScrapExport=S.convertDispose==='scrap'||S.convertDispose==='export';
+    let isBeforeApply=S.convertDisposeDate==='before_apply';
+    let isBeforePay=S.convertDisposeDate==='before_pay';
+    if(isSell){
+      if(isBeforeApply) html+=`<li>자동차등록원부(갑부)</li><li>가족관계증명서</li>`;
+      else if(isBeforePay) html+=`<li>자동차등록원부(갑부)</li><li>가족관계증명서</li><li><b>※ 지급신청 시</b> 이전등록 완료사항이 포함된 자동차등록원부(갑부) 반드시 추가제출</li>`;
+    }
+    if(isScrapExport){
+      if(isBeforeApply) html+=`<li>말소사실증명서</li>`;
+      else if(isBeforePay) html+=`<li>자동차등록원부(갑)</li><li><b>※ 지급신청 시</b> 폐차 또는 수출 완료사항이 포함된 자동차등록원부(갑부) 또는 말소사실증명서 추가제출</li>`;
+    }
+    html+=`</ul></div>`;
+  }
+  el('docList').innerHTML=html;
+}
+
+// 초기화 실행
+renderAddSupport();
+updateConvertEligByBuyer();
+toggleDieselSection();
+calculate();
+</script>
+</body>
+</html>
